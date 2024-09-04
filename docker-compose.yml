@@ -1,0 +1,36 @@
+version: '3.9'
+
+services:
+  mysqldb:
+    image: mysql
+    container_name: mysql_json
+    environment:
+      MYSQL_DATABASE: 'test'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql-db:/var/lib/mysql
+    networks:
+      - mysql-database
+    restart:
+      always
+  phpmyadmin:
+    depends_on:
+      - mysqldb
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: mysqldb
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - "8090:80"
+    networks:
+      - mysql-database
+
+volumes:
+  mysql-db:
+networks:
+  mysql-database:
+    driver: bridge
+
+
